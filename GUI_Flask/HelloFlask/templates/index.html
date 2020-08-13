@@ -1,0 +1,64 @@
+﻿<html>
+<head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div style="background-color:lightgray; border:5px solid white; height: 100px; display: flex; justify-content: center; align-items: center;">
+            <span class="message">{{ message }} </span>
+        </div>
+    </div>
+    <div class="clearfix visible-sm"></div>
+
+    <div class="row">
+        <div style="background-color: lightgray; border:5px solid white; height: 100px; display: flex; justify-content: center; align-items:center">
+            <span class="message" id="subMessage">{{ extensionMessage }}</span>
+        </div>
+    </div>
+    <div class="clearfix visible-sm"></div>
+
+    <div class="row">
+        <div style="background-color: lightgray; border:5px solid white; height: 125px; display: flex; justify-content: center; align-items:center">
+            <label for="myfile" id="subMessage">{{ select }}</label>
+            <input type="file" id="myfile" name="myfile" style="padding: 20px" accept=".doc,.docx, .txt">
+        </div>
+    </div>
+    <div class="clearfix visible-sm"></div>
+    <div class="row">
+        <div style="background-color: lightgray; border:5px solid white; height: 500px; display: flex; justify-content: center; align-items:center">
+            <div id="my_camera"></div>
+            <input type=button value="Take Snapshot" onClick="take_snapshot()" >
+            <div id="results"></div>
+        </div>
+    </div>
+        
+    <script type="text/javascript" src="/static/webcamjs-master/webcam.min.js"></script>
+    <script>
+        Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: 'jpeg',
+            jpeg_quality: 90
+        });
+        Webcam.attach('#my_camera');
+
+        //Code to handle taking the snapshot and displaying it locally
+        function take_snapshot() {
+
+            // take snapshot and get image data
+            Webcam.snap(function (data_uri) {
+                // display results in page
+                document.getElementById('results').innerHTML =
+                    '<img src="' + data_uri + '"/>';
+            });
+        }
+    </script>
+</body>
+</html>

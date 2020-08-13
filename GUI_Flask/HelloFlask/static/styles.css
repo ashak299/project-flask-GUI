@@ -1,0 +1,14 @@
+.message {
+    font-weight: 600;
+    color: black;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+    font-size: xx-large;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#subMessage {
+    font-weight: 400;
+    font-size: large;
+}

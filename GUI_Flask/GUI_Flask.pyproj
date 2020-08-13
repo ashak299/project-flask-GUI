@@ -27,6 +27,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="HelloFlask\static\module.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="runserver.py" />
     <Compile Include="HelloFlask\views.py">
       <SubType>Code</SubType>
@@ -36,6 +39,44 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="HelloFlask\static\styles.css" />
+    <Content Include="HelloFlask\static\webcamjs-master\bower.json" />
+    <Content Include="HelloFlask\static\webcamjs-master\build.sh" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\basic.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\click-to-run.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\combo.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\constraints.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\continuous.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\crop-large.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\crop.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\events.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\flash-disabled.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\flash.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\flip-flash.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\flip.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\hd.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\ios-large.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\large.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\preview.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\reset.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\sfx.html" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\shutter.mp3" />
+    <Content Include="HelloFlask\static\webcamjs-master\demos\shutter.ogg" />
+    <Content Include="HelloFlask\static\webcamjs-master\DOCS.md" />
+    <Content Include="HelloFlask\static\webcamjs-master\flash\com\adobe\images\BitString.as" />
+    <Content Include="HelloFlask\static\webcamjs-master\flash\com\adobe\images\JPGEncoder.as" />
+    <Content Include="HelloFlask\static\webcamjs-master\flash\com\adobe\images\PNGEncoder.as" />
+    <Content Include="HelloFlask\static\webcamjs-master\flash\mx\utils\Base64Encoder.as" />
+    <Content Include="HelloFlask\static\webcamjs-master\flash\README.txt" />
+    <Content Include="HelloFlask\static\webcamjs-master\flash\Webcam.as" />
+    <Content Include="HelloFlask\static\webcamjs-master\flash\Webcam.fla" />
+    <Content Include="HelloFlask\static\webcamjs-master\LICENSE" />
+    <Content Include="HelloFlask\static\webcamjs-master\package.json" />
+    <Content Include="HelloFlask\static\webcamjs-master\README.md" />
+    <Content Include="HelloFlask\static\webcamjs-master\webcam.js" />
+    <Content Include="HelloFlask\static\webcamjs-master\webcam.min.js" />
+    <Content Include="HelloFlask\static\webcamjs-master\webcam.swf" />
+    <Content Include="HelloFlask\templates\index.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +92,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelloFlask\" />
+    <Folder Include="HelloFlask\static\" />
+    <Folder Include="HelloFlask\static\webcamjs-master\" />
+    <Folder Include="HelloFlask\static\webcamjs-master\demos\" />
+    <Folder Include="HelloFlask\static\webcamjs-master\flash\" />
+    <Folder Include="HelloFlask\static\webcamjs-master\flash\com\" />
+    <Folder Include="HelloFlask\static\webcamjs-master\flash\com\adobe\" />
+    <Folder Include="HelloFlask\static\webcamjs-master\flash\com\adobe\images\" />
+    <Folder Include="HelloFlask\static\webcamjs-master\flash\mx\" />
+    <Folder Include="HelloFlask\static\webcamjs-master\flash\mx\utils\" />
     <Folder Include="HelloFlask\templates\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
