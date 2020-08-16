@@ -92,6 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelloFlask\" />
+    <Folder Include="HelloFlask\file_uploads\" />
+    <Folder Include="HelloFlask\image_uploads\" />
     <Folder Include="HelloFlask\static\" />
     <Folder Include="HelloFlask\static\webcamjs-master\" />
     <Folder Include="HelloFlask\static\webcamjs-master\demos\" />
