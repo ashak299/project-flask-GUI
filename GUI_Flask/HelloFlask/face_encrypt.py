@@ -42,8 +42,16 @@ def createLock(faceImage):
     bioLock=A1 ^ C1
     return bioLock, randKey;
 
-def secondKey(secondFaceImage):
-    global lock;
+############################################################
+#def releaseKey()
+############################################################
+
+def check(secondFaceImage):
+    #global lock;
+    #result=releaseKey()
+    #lock=result[0]
+    #randomKey=result[1]
+
     #turning image into binarized feature vector
     A2=features(secondFaceImage)
 
@@ -58,7 +66,12 @@ def secondKey(secondFaceImage):
     K=np.where(np.zeros(87)>0, 1,0)
     for m in range(0,len(key[0])):   
         K[m]=ord(key[0][m])
-    return K;
+
+    #check if equal
+    if (areEqual(K, randomKey, len(randomKey))):
+        return true;
+    else:
+        return false;
 
 
 

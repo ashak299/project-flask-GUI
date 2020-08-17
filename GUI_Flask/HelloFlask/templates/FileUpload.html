@@ -13,21 +13,30 @@
 </head>
 <body>
     <div class="container">
-        <div style="background-color:lavender; border:5px solid white; height: 100px; display: flex; justify-content: center; align-items: center;">
-            <span class="message" id="purple">{{ message }} </span>
+        <div class="row">
+            <div style="background-color:lavender; border:5px solid white; height: 100px; display: flex; justify-content: center; align-items: center;">
+                <span class="message" id="purple">{{ message }} </span>
+            </div>
         </div>
-    </div>
-    <div class="clearfix visible-sm"></div>
+        <div class="clearfix visible-sm"></div>
 
-    <div class="row">
-        <div style="background-color: lavender; border:5px solid white; height: 125px; display: flex; justify-content: center; align-items:center">
-            <span class="message" id="subMessage">{{ select }}</span>
-            <form method=POST enctype=multipart/form-data action="http://localhost:5555/uploader">
-                <input type="file" name="file" />
-                <input type="submit" />
-            </form>
+        <div class="row">
+            <div style="background-color:lavender; border:5px solid white; height: 100px; display: flex; justify-content: center; align-items: center;">
+                <span class="message" id="subMessage">{{ fileType }} </span>
+            </div>
         </div>
+        <div class="clearfix visible-sm"></div>
+
+        <div class="row">
+            <div style="background-color: lavender; border:5px solid white; height: 125px; display: flex; justify-content: center; align-items:center">
+                <span class="message" id="subMessage" style="padding: 20px">{{ select }}</span>
+                <form method=POST enctype=multipart/form-data action="http://localhost:5555/uploader">
+                    <input type="file" name="file" />
+                    <input type="submit"/>
+                </form>
+            </div>
+        </div>
+        <div class="clearfix visible-sm"></div>
     </div>
-    <div class="clearfix visible-sm"></div>
 </body>
 </html>

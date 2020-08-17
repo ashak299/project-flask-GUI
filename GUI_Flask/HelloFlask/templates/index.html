@@ -25,10 +25,13 @@
     <div class="clearfix visible-sm"></div>
 
     <div class="row">
-        <div style="background-color: lightgray; border:5px solid white; height: 500px; display: flex; justify-content: center; align-items:center">
-            <div id="my_camera"></div>
-            <input type=button value="Take Snapshot" onClick="take_snapshot()">
-            <div id="results"></div>
+        <div style="background-color: lightgray; border:5px solid white; height: 700px; display: flex; justify-content: center; align-items:center">
+            <form method="POST" enctype="multipart/form-data" id="myForm">
+                <div id="my_camera"></div>
+                <input type=button value="Take Snapshot" onClick="take_snapshot()" />
+                <input type="button" value="Upload Image" onClick="uploadImage()" />
+                <div id="results"></div>
+            </form>
         </div>
     </div>
     <div class="row">
@@ -49,14 +52,25 @@
 
         //Code to handle taking the snapshot and displaying it locally
         function take_snapshot() {
-
             // take snapshot and get image data
             Webcam.snap(function (data_uri) {
                 // display results in page
                 document.getElementById('results').innerHTML =
-                    '<img src="' + data_uri + '"/>';
+                    '<img id="imageprev" src="' + data_uri + '"/>';
             });
         }
+
+        //code to upload image
+        function uploadImage() {
+            var base64image = document.getElementById("imageprev").src;
+            var form = document.getElementById('myForm');
+            var formData = new FormData(form);
+            formData.append('face', base64image);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open('POST', "http://localhost:5555/ImageUpload" )
+            xmlhttp.send(formData);
+        }
+        
     </script>
 
 </body>

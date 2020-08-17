@@ -28,7 +28,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelloFlask\static\module.py">
+    <Compile Include="HelloFlask\face_encrypt.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="runserver.py" />
@@ -77,6 +77,7 @@
     <Content Include="HelloFlask\static\webcamjs-master\webcam.js" />
     <Content Include="HelloFlask\static\webcamjs-master\webcam.min.js" />
     <Content Include="HelloFlask\static\webcamjs-master\webcam.swf" />
+    <Content Include="HelloFlask\templates\Encrypting.html" />
     <Content Include="HelloFlask\templates\FileUpload.html" />
     <Content Include="HelloFlask\templates\index.html" />
     <Content Include="HelloFlask\templates\NotUploaded.html" />
@@ -84,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelloFlask\" />
-    <Folder Include="HelloFlask\image_uploads\" />
+    <Folder Include="HelloFlask\static\image_uploads\" />
     <Folder Include="HelloFlask\static\" />
     <Folder Include="HelloFlask\static\file_uploads\" />
     <Folder Include="HelloFlask\static\webcamjs-master\" />
