@@ -12,3 +12,15 @@
     font-weight: 400;
     font-size: large;
 }
+#error{
+    color: red;
+}
+#purple{
+    color:blueviolet;
+}
+
+.nextStep {
+    font-size: large;
+    font-weight: 300;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}

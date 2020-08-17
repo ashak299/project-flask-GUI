@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div style="background-color:lavender; border:5px solid white; height: 100px; display: flex; justify-content: center; align-items: center;">
+            <span class="message" id="purple">{{ message }} </span>
+        </div>
+    </div>
+    <div class="clearfix visible-sm"></div>
+
+    <div class="row">
+        <div style="background-color: lavender; border:5px solid white; height: 125px; display: flex; justify-content: center; align-items:center">
+            <span class="message" id="subMessage">{{ select }}</span>
+            <form method=POST enctype=multipart/form-data action="http://localhost:5555/uploader">
+                <input type="file" name="file" />
+                <input type="submit" />
+            </form>
+        </div>
+    </div>
+    <div class="clearfix visible-sm"></div>
+</body>
+</html>

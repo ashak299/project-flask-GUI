@@ -77,14 +77,16 @@
     <Content Include="HelloFlask\static\webcamjs-master\webcam.js" />
     <Content Include="HelloFlask\static\webcamjs-master\webcam.min.js" />
     <Content Include="HelloFlask\static\webcamjs-master\webcam.swf" />
+    <Content Include="HelloFlask\templates\FileUpload.html" />
     <Content Include="HelloFlask\templates\index.html" />
+    <Content Include="HelloFlask\templates\NotUploaded.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelloFlask\" />
-    <Folder Include="HelloFlask\file_uploads\" />
     <Folder Include="HelloFlask\image_uploads\" />
     <Folder Include="HelloFlask\static\" />
+    <Folder Include="HelloFlask\static\file_uploads\" />
     <Folder Include="HelloFlask\static\webcamjs-master\" />
     <Folder Include="HelloFlask\static\webcamjs-master\demos\" />
     <Folder Include="HelloFlask\static\webcamjs-master\flash\" />
