@@ -77,7 +77,8 @@
     <Content Include="HelloFlask\static\webcamjs-master\webcam.js" />
     <Content Include="HelloFlask\static\webcamjs-master\webcam.min.js" />
     <Content Include="HelloFlask\static\webcamjs-master\webcam.swf" />
-    <Content Include="HelloFlask\templates\Encrypting.html" />
+    <Content Include="HelloFlask\templates\checking.html" />
+    <Content Include="HelloFlask\templates\CreateLock.html" />
     <Content Include="HelloFlask\templates\FileUpload.html" />
     <Content Include="HelloFlask\templates\index.html" />
     <Content Include="HelloFlask\templates\NotUploaded.html" />

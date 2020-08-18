@@ -58,21 +58,14 @@ def createLock(path):
     bioLock=A1 ^ C1
     return bioLock, randKey;
 
-############################################################
-#def releaseKey()
-############################################################
-
-def check(secondFacePath, randomKey):
-    #global lock;
-    #result=releaseKey()
-    #lock=result[0]
-    #randomKey=result[1]
+def check(secondFacePath, randomKey, lock):
 
     #turning image into binarized feature vector
     A2=features(secondFacePath)
-
+    print(A2, flush=True)
     #xor lock with second feature vector
-    Temp= A2 ^ lock
+    Temp= np.logical_xor(A2, lock)
+    print(Temp, flush=True)
     C2=""
     for n in range(0,127):
         C2=C2+chr(Temp[n])
@@ -184,7 +177,7 @@ def CreateLock():
     f1.close();
 
     return render_template(
-        "Encrypting.html")
+        "CreateLock.html")
 
 
 
@@ -198,18 +191,22 @@ def SecondImage():
     return redirect('http://localhost:5555/NotUploaded')
 
 
-#@app.route('/checking')
-#def checking():
-#    #get random key
+@app.route('/checking')
+def checking():
+    #get random key
+    original_key = np.loadtxt("HelloFlask/static/encryption_folder/randomKey.txt")
+    print(original_key,flush=True)
 
+    #get lock
+    biometric_lock=np.loadtxt("HelloFlask/static/encryption_folder/lock.txt")
+    print(biometric_lock, flush=True)
+    isSuccess=check("HelloFlask/static/image_uploads/second_image.jpeg", original_key, biometric_lock)
 
-#    check("HelloFlask/static/image_uploads/second_image.jpeg", )
-#    #console log success / not success
-
-
-
-
-
+    if isSuccess:
+        return render_template(
+            "checking.html")
+    else:
+        return redirect('http://localhost:5555/NotUploaded')
 
 
 if __name__ == '__main__':
