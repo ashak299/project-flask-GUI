@@ -3,12 +3,59 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Encrypting</title>
+    <title>Encrypted</title>
     <link rel="stylesheet" type="text/css" href="/static/styles.css" />
 </head>
 <body>
-    <span class="message" id="purple">Encrypting</span>
+    <span class="message" id="purple">File Encrypted</span>
     <br />
-    <!--<a href="/" class="nextStep"> Click to Try again</a>-->
+    <span class="message" id="blue">Take a snapshot to decrypt file</span>
+    <div style="background-color: aliceblue; border:5px solid white; height: 700px; display: flex; justify-content: center; align-items:center">
+        <form method="POST" enctype="multipart/form-data" id="myForm">
+            <div id="my_camera"></div>
+            <input type=button value="Take Snapshot" onClick="take_snapshot()" />
+            <input type="button" value="Upload Image" onClick="uploadImage()" />
+            <div id="results"></div>
+            <span class="subMessage" id="upload_success"></span>
+        </form>
+    </div>
+
+    <!--<div style="background-color: aliceblue; border:5px solid white; height: 200px; display: flex; justify-content: center; align-items:center">
+        <a href="FileUpload" class="nextStep">Click to Upload File</a>
+    </div>-->
+
+    <script type="text/javascript" src="/static/webcamjs-master/webcam.min.js"></script>
+    <script>
+        Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: 'jpeg',
+            jpeg_quality: 90
+        });
+        Webcam.attach('#my_camera');
+
+        //Code to handle taking the snapshot and displaying it locally
+        function take_snapshot() {
+            // take snapshot and get image data
+            Webcam.snap(function (data_uri) {
+                // display results in page
+                document.getElementById('results').innerHTML =
+                    '<img id="imageprev" src="' + data_uri + '"/>';
+            });
+        }
+
+        //code to upload image
+        function uploadImage() {
+            var base64image = document.getElementById("imageprev").src;
+            var form = document.getElementById('myForm');
+            var formData = new FormData(form);
+            formData.append('face', base64image);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open('POST', "http://localhost:5555/SecondImage");
+            xmlhttp.send(formData);
+            document.getElementById('upload_success').innerHTML = 'Upload Successful';
+        }
+
+    </script>
 </body>
 </html>

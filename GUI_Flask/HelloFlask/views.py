@@ -7,6 +7,10 @@ import HelloFlask
 from HelloFlask import app
 import werkzeug
 from werkzeug.utils import secure_filename
+from base64 import b64decode
+from PIL import Image
+from io import BytesIO
+import re, time, base64
 
 #-----------face recognition and encryption-------------
 import face_recognition
@@ -26,8 +30,8 @@ def areEqual(arr1, arr2, n):
     return True;
 
 #Function used to extract feature vectors and binarize
-def features(face):
-    image = face_recognition.load_image_file(path_to_face)
+def features(path):
+    image = face_recognition.load_image_file(path)
     #extracting feature vectors
     encoding = face_recognition.face_encodings(image);
     #binarization
@@ -35,16 +39,17 @@ def features(face):
     return encoding;
 
 #Generating Lock function and creates random key
-def createLock(faceImage):
+def createLock(path):
     #turning image into binarized feature vector
-    A1=features(faceImage);
+    A1=features(path);
+    print(A1)
     
     #generating random Key
     randKey=np.random.choice([0, 1], size=(87,), p=[1./2, 1./2])
 
     #Reed-Solomon encoding
     RS=rs.RSCoder(127,87)
-    code=RS.encode(randomKey)
+    code=RS.encode(randKey)
     C1=np.where(np.zeros(128)>0, 1,0)
     for p in range(0,127):
         C1[p]=ord(code[p])
@@ -57,14 +62,14 @@ def createLock(faceImage):
 #def releaseKey()
 ############################################################
 
-def check(secondFaceImage):
+def check(secondFacePath, randomKey):
     #global lock;
     #result=releaseKey()
     #lock=result[0]
     #randomKey=result[1]
 
     #turning image into binarized feature vector
-    A2=features(secondFaceImage)
+    A2=features(secondFacePath)
 
     #xor lock with second feature vector
     Temp= A2 ^ lock
@@ -129,33 +134,77 @@ def NotUploaded():
     return render_template(
         "NotUploaded.html")
 
+#decoding image from base 64 and saving it to file path
+def getI420FromBase64(codec, path):
+    base64_data = re.sub('^data:image/.+;base64,', '', codec)
+    byte_data = base64.b64decode(base64_data)
+    image_data = BytesIO(byte_data)
+    img = Image.open(image_data)
+    img.save(path)
+
 #uploading face image
 @app.route('/ImageUpload', methods=['GET', 'POST'])
 def ImageUpload():
     if request.method == 'POST':
-        faceImage= request.files['face']
-        faceImage.save(os.path.join(IMAGE_FOLDER, secure_filename(faceImage.filename)))
+        #print(request.form, flush=True);
+        faceImage=request.form.get('face');
+        getI420FromBase64(faceImage, "HelloFlask/static/image_uploads/first_image.jpeg");
+        #faceImage= request.files['face']
+        #filename='face_image';
+        #f = open("HelloFlask/static/image_uploads/face_image.jpeg", "w")
+        ##f.write(b64decode(faceImage))
+        #f.write(faceImage)
+        #f.close()
+        #faceImage.save(os.path.join(IMAGE_FOLDER, secure_filename(faceImage.filename)))
         return redirect('http://localhost:5555/FileUpload')
     return redirect('http://localhost:5555/NotUploaded')
 
+
+
 #Creating Lock
-#@app.route('/CreateLock'):
+@app.route('/CreateLock')
+def CreateLock():
     #get first image
-    #create lock
+    #first=Image.open("HelloFlask/static/image_uploads/first_image.jpeg");
+
+    #generating random key and biometric lock from first face image
+    lock,key=createLock("HelloFlask/static/image_uploads/first_image.jpeg");
+    print(key, flush=True)
+    #lock=result[0]
+    #key=result[1]
+
     #save lock- write into python text file
+    f=open("HelloFlask/static/encryption_folder/lock.txt", "w")
+    for row in lock:
+        np.savetxt(f,row);
+    f.close();
+    #save random key for checking later
+    f1=open("HelloFlask/static/encryption_folder/randomKey.txt", "w")
+    np.savetxt(f1,key);
+    f1.close();
 
-    #redirect to web cam page 2
+    return render_template(
+        "Encrypting.html")
 
 
 
-#@app.route('/picture2')
-#web cam 2
+#redirect to web cam page 2
+@app.route('/SecondImage', methods=['GET', 'POST'])
+def SecondImage():
+    if request.method == 'POST':
+        faceImage=request.form.get('face');
+        getI420FromBase64(faceImage, "HelloFlask/static/image_uploads/second_image.jpeg");
+        return redirect('http://localhost:5555/FileUpload')
+    return redirect('http://localhost:5555/NotUploaded')
 
-#@app.route('/Checking')
-    #get second image
 
-    #check(secondImage)
-    #console log success / not success
+#@app.route('/checking')
+#def checking():
+#    #get random key
+
+
+#    check("HelloFlask/static/image_uploads/second_image.jpeg", )
+#    #console log success / not success
 
 
 

@@ -31,14 +31,18 @@
                 <input type=button value="Take Snapshot" onClick="take_snapshot()" />
                 <input type="button" value="Upload Image" onClick="uploadImage()" />
                 <div id="results"></div>
+                <span class="subMessage" id="upload_success"></span>
             </form>
         </div>
     </div>
+    <div class="clearfix visible-sm"></div>
+
     <div class="row">
         <div style="background-color: lavender; border:5px solid white; height: 200px; display: flex; justify-content: center; align-items:center">
             <a href="FileUpload" class="nextStep">Click to Upload File</a>
         </div>
     </div>
+    <div class="clearfix visible-sm"></div>
 
     <script type="text/javascript" src="/static/webcamjs-master/webcam.min.js"></script>
     <script>
@@ -67,10 +71,12 @@
             var formData = new FormData(form);
             formData.append('face', base64image);
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open('POST', "http://localhost:5555/ImageUpload" )
+            xmlhttp.open('POST', "http://localhost:5555/ImageUpload");
             xmlhttp.send(formData);
+            document.getElementById('upload_success').innerHTML = 'Upload Successful, now upload the file';
+
         }
-        
+
     </script>
 
 </body>
