@@ -11,6 +11,7 @@ from base64 import b64decode
 from PIL import Image
 from io import BytesIO
 import re, time, base64
+import pickle
 
 #-----------face recognition and encryption-------------
 import face_recognition
@@ -21,6 +22,7 @@ import os
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 
+RS=rs.RSCoder(127,87)
 #FUNCTIONS
 #Function used to verify that the key is the same
 def areEqual(arr1, arr2, n):
@@ -33,22 +35,27 @@ def areEqual(arr1, arr2, n):
 def features(path):
     image = face_recognition.load_image_file(path)
     #extracting feature vectors
-    encoding = face_recognition.face_encodings(image);
+    encoding = face_recognition.face_encodings(image)[0];
+    print(encoding)
+    print(len(encoding))
+
     #binarization
-    encoding= np.where(encoding>np.mean(encoding), 1, 0);
-    return encoding;
+    arr=np.array(encoding)
+    print(len(arr))
+    arr=np.where(arr>np.mean(arr), 1, 0);
+    print(len(arr))
+
+    return arr;
 
 #Generating Lock function and creates random key
 def createLock(path):
     #turning image into binarized feature vector
     A1=features(path);
-    print(A1)
     
     #generating random Key
     randKey=np.random.choice([0, 1], size=(87,), p=[1./2, 1./2])
 
-    #Reed-Solomon encoding
-    RS=rs.RSCoder(127,87)
+    #Reed-Solomon encoding    
     code=RS.encode(randKey)
     C1=np.where(np.zeros(128)>0, 1,0)
     for p in range(0,127):
@@ -59,15 +66,15 @@ def createLock(path):
     return bioLock, randKey;
 
 def check(secondFacePath, randomKey, lock):
-
     #turning image into binarized feature vector
     A2=features(secondFacePath)
     print(A2, flush=True)
     #xor lock with second feature vector
-    Temp= np.logical_xor(A2, lock)
-    print(Temp, flush=True)
+    Temp= A2 ^ lock
+    #print(Temp, flush=True)
     C2=""
     for n in range(0,127):
+        #print(Temp[n])
         C2=C2+chr(Temp[n])
 
     #Getting key back
@@ -78,9 +85,9 @@ def check(secondFacePath, randomKey, lock):
 
     #check if equal
     if (areEqual(K, randomKey, len(randomKey))):
-        return true;
+        return True;
     else:
-        return false;
+        return False;
 
 #---------------------------------------------#
 
@@ -162,18 +169,31 @@ def CreateLock():
 
     #generating random key and biometric lock from first face image
     lock,key=createLock("HelloFlask/static/image_uploads/first_image.jpeg");
-    print(key, flush=True)
+    print(lock)
     #lock=result[0]
     #key=result[1]
 
-    #save lock- write into python text file
-    f=open("HelloFlask/static/encryption_folder/lock.txt", "w")
-    for row in lock:
-        np.savetxt(f,row);
-    f.close();
-    #save random key for checking later
-    f1=open("HelloFlask/static/encryption_folder/randomKey.txt", "w")
-    np.savetxt(f1,key);
+    ##save lock- write into python text file
+    #f=open("HelloFlask/static/encryption_folder/lock.npy", "w")
+    #np.savetxt(f,lock);
+    ##for row in lock:
+    ##    np.savetxt(f,row);
+    #f.close();
+
+    ##save random key for checking later
+    #f1=open("HelloFlask/static/encryption_folder/randomKey.npy", "w")
+    ##np.savetxt(f1,key);
+    #np.savetxt(f1,key)
+    #f1.close();
+
+    #Saving lock
+    f=open("HelloFlask/static/encryption_folder/lock", 'ab')
+    pickle.dump(lock, f)
+    f.close()
+
+    #saving key
+    f1=open("HelloFlask/static/encryption_folder/randomKey", "ab")
+    pickle.dump(key, f1)
     f1.close();
 
     return render_template(
@@ -194,14 +214,25 @@ def SecondImage():
 @app.route('/checking')
 def checking():
     #get random key
-    original_key = np.loadtxt("HelloFlask/static/encryption_folder/randomKey.txt")
+    keyFile= open("HelloFlask/static/encryption_folder/randomKey", 'rb')
+    original_key = pickle.load(keyFile)
+    keyFile.close();
     print(original_key,flush=True)
 
     #get lock
-    biometric_lock=np.loadtxt("HelloFlask/static/encryption_folder/lock.txt")
+    lockFile=open("HelloFlask/static/encryption_folder/lock", 'rb')
+    biometric_lock=pickle.load(lockFile)
+    lockFile.close();
     print(biometric_lock, flush=True)
+
+    #check if two values are equal
     isSuccess=check("HelloFlask/static/image_uploads/second_image.jpeg", original_key, biometric_lock)
 
+    #clearing files
+    #os.remove("HelloFlask/static/image_uploads/second_image.jpeg")
+    #os.remove("HelloFlask/static/image_uploads/first_image.jpeg")
+    #os.remove("HelloFlask/static/encryption_folder/lock.txt")
+    #os.remove("HelloFlask/static/encryption_folder/randomKey.txt")
     if isSuccess:
         return render_template(
             "checking.html")

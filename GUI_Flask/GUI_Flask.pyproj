@@ -28,9 +28,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelloFlask\face_encrypt.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="runserver.py" />
     <Compile Include="HelloFlask\views.py">
       <SubType>Code</SubType>
@@ -81,6 +78,7 @@
     <Content Include="HelloFlask\templates\CreateLock.html" />
     <Content Include="HelloFlask\templates\FileUpload.html" />
     <Content Include="HelloFlask\templates\index.html" />
+    <Content Include="HelloFlask\templates\NotSuccessful.html" />
     <Content Include="HelloFlask\templates\NotUploaded.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
