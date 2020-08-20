@@ -7,8 +7,12 @@
     <link rel="stylesheet" type="text/css" href="/static/styles.css" />
 </head>
 <body>
-    <span class="message" id="purple">File Encrypted</span>
-    <br />
+    <div style="background-color: lavender; border:5px solid white; height: 200px; display: flex; justify-content: center; align-items:center">
+        <span class="message" id="purple">File Encrypted</span>
+        <br />
+        <a href="HelloFlask/static/encryption_folder/EncryptedFile.enc" download="Encrypted_File" style="padding: 30px"> Download Encrypted file</a>
+        <br />
+    </div>
     <span class="message" id="blue">Take a snapshot to decrypt file</span>
     <div style="background-color: aliceblue; border:5px solid white; height: 700px; display: flex; justify-content: center; align-items:center">
         <form method="POST" enctype="multipart/form-data" id="myForm">
