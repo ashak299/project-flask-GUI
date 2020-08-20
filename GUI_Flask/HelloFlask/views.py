@@ -21,9 +21,8 @@ import unireedsolomon as rs
 import os
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
-
-RS=rs.RSCoder(127,87)
 #FUNCTIONS
+RS=rs.RSCoder(127,87)
 #takes in a numpy ndarray and outputs a 32 byte value
 def randIntTo32(x):
     #padding with 0s to reach 256 int values
@@ -43,7 +42,7 @@ def randIntTo32(x):
     bytes_key=bytes(int_arr)
     return bytes_key
 
-#encrypt file
+#encryption function
 def encrypt(key):
     backend = default_backend()
     #Padding key to 32 bytes
@@ -82,7 +81,7 @@ def encrypt(key):
    
     return True;
 
-#decrypt file
+#decryption function
 def decrypt(key, iv):
     backend = default_backend()
 
@@ -181,7 +180,7 @@ def check(secondFacePath, randomKey, lock):
     else:
         return False;
 
-#---------------------------------------------#
+#------------------------------------------------------#
 
 #Upload folders
 UPLOAD_FOLDER = 'HelloFlask/static/file_uploads/'
