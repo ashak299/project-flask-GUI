@@ -126,7 +126,7 @@ def features(path):
 
     return arr;
 
-#Generating Lock function and creates random key
+#Generating Lock function and creates random key, then calls encrypt function
 def createLock(path):
     #turning image into binarized feature vector
     A1=features(path);
@@ -148,6 +148,7 @@ def createLock(path):
 
     return bioLock, randKey;
 
+#checks if the two images are a match, then calls decrypt function
 def check(secondFacePath, randomKey, lock):
     #turning image into binarized feature vector
     A2=features(secondFacePath)
@@ -258,7 +259,6 @@ def CreateLock():
     #generating random key and biometric lock from first face image
     #using this random key to encrypt the file
     lock,key=createLock("HelloFlask/static/image_uploads/first_image.jpeg");
-    #print(lock)
     
     #Saving lock
     f=open("HelloFlask/static/encryption_folder/lock", 'ab')
