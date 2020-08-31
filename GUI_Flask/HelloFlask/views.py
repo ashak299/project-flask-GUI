@@ -13,7 +13,7 @@ from io import BytesIO
 import re, time, base64
 import pickle
 
-#-----------face recognition and encryption-------------
+#-------------------------face recognition and encryption-----------------------------
 import face_recognition
 import random
 import numpy as np
@@ -21,8 +21,9 @@ import unireedsolomon as rs
 import os
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
+
 #FUNCTIONS
-RS=rs.RSCoder(127,87)
+RS=rs.RSCoder(128,90)
 #takes in a numpy ndarray and outputs a 32 byte value
 def randIntTo32(x):
     #padding with 0s to reach 256 int values
@@ -66,7 +67,6 @@ def encrypt(key):
     #encrypted file
     encFile="HelloFlask/static/encryption_folder/EncryptedFile.enc"
     f1 = open(encFile, 'wb')
-
     with open(filePath, 'rb') as f:
         while True:
             data = f.read(BUF_SIZE)
@@ -122,22 +122,22 @@ def features(path):
     #binarization
     arr=np.array(encoding)
     arr=np.where(arr>np.mean(arr), 1, 0);
-    print(len(arr))
 
     return arr;
+
 
 #Generating Lock function and creates random key, then calls encrypt function
 def createLock(path):
     #turning image into binarized feature vector
     A1=features(path);
-    
+
     #generating random Key
-    randKey=np.random.choice([0, 1], size=(70,), p=[1./2, 1./2])
+    randKey=np.random.choice([0, 1], size=(90,), p=[1./2, 1./2])
 
     #Reed-Solomon encoding    
     code=RS.encode(randKey)
     C1=np.where(np.zeros(128)>0, 1,0)
-    for p in range(0,127):
+    for p in range(0,128):
         C1[p]=ord(code[p])
 
     #Creating Biometric lock
@@ -146,49 +146,68 @@ def createLock(path):
     #encrypting file
     encrypt(randKey)
 
-    return bioLock, randKey;
+    return bioLock, randKey
+
 
 #checks if the two images are a match, then calls decrypt function
-def check(secondFacePath, randomKey, lock):
-    #turning image into binarized feature vector
-    A2=features(secondFacePath)
+def check(secondFacePath, randomKey, lock): 
+    try:
+        #turning image into binarized feature vector
+        A2=features(secondFacePath)
+        print(A2)
 
-    #xor lock with second feature vector
-    Temp= A2 ^ lock
-    #print(Temp, flush=True)
-    C2=""
-    for n in range(0,127):
-        #print(Temp[n])
-        C2=C2+chr(Temp[n])
+        #xor lock with second feature vector
+        Temp= A2 ^ lock
+        C2=""
+        for n in range(0,128):
+            C2=C2+chr(Temp[n])
 
-    #Getting key back using second feature vector
-    #Reed- Solomon decoding
-    key= RS.decode(C2)
-    K=np.where(np.zeros(87)>0, 1,0)
-    for m in range(0,len(key[0])):   
-        K[m]=ord(key[0][m])
+        #Getting key back using second feature vector
+        #Reed- Solomon decoding
+        key= RS.decode(C2)
+        K=np.where(np.zeros(90)>0, 1,0)
+        for m in range(0,len(key[0])):   
+            K[m]=ord(key[0][m])
 
-    #check if equal
-    if (areEqual(K, randomKey, len(randomKey))):
-        #getting iv
-        iv_file=open("HelloFlask/static/encryption_folder/ivFile", 'rb')
-        initilisation_vector=pickle.load(iv_file)
-        iv_file.close();
+        print(K, flush=True)
+        print(randomKey, flush=True)
+       
+        #check if equal
+        if (areEqual(K, randomKey, len(randomKey))):
+            #getting iv
+            iv_file=open("HelloFlask/static/encryption_folder/ivFile", 'rb')
+            initilisation_vector=pickle.load(iv_file)
+            iv_file.close();
 
-        #decrypting file
-        decrypt(K, initilisation_vector)
-        return True;
-    else:
+            #decrypting file
+            decrypt(K, initilisation_vector)
+            return True;
+        else:
+            print(" Fail", flush=True)
+            return False;
+    #this exception is thrown when the face is not a match
+    except rs.RSCodecError:
+        print("Not a match, over threshold", flush=True)
         return False;
 
-#------------------------------------------------------#
+
+#------------------------------------------------------------------------------------
+
+#decoding image from base 64 and saving it to file path
+def getI420FromBase64(codec, path):
+    base64_data = re.sub('^data:image/.+;base64,', '', codec)
+    byte_data = base64.b64decode(base64_data)
+    image_data = BytesIO(byte_data)
+    img = Image.open(image_data)
+    img.save(path)
+
 
 #Upload folders
 UPLOAD_FOLDER = 'HelloFlask/static/file_uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 IMAGE_FOLDER='HelloFlask/static/image_uploads/'
 app.config['IMAGE_FOLDER'] = IMAGE_FOLDER
+
 
 #index page
 @app.route('/')
@@ -226,28 +245,13 @@ def NotUploaded():
     return render_template(
         "NotUploaded.html")
 
-#decoding image from base 64 and saving it to file path
-def getI420FromBase64(codec, path):
-    base64_data = re.sub('^data:image/.+;base64,', '', codec)
-    byte_data = base64.b64decode(base64_data)
-    image_data = BytesIO(byte_data)
-    img = Image.open(image_data)
-    img.save(path)
 
 #uploading face image
 @app.route('/ImageUpload', methods=['GET', 'POST'])
 def ImageUpload():
     if request.method == 'POST':
-        #print(request.form, flush=True);
         faceImage=request.form.get('face');
         getI420FromBase64(faceImage, "HelloFlask/static/image_uploads/first_image.jpeg");
-        #faceImage= request.files['face']
-        #filename='face_image';
-        #f = open("HelloFlask/static/image_uploads/face_image.jpeg", "w")
-        ##f.write(b64decode(faceImage))
-        #f.write(faceImage)
-        #f.close()
-        #faceImage.save(os.path.join(IMAGE_FOLDER, secure_filename(faceImage.filename)))
         return redirect('http://localhost:5555/FileUpload')
     return redirect('http://localhost:5555/NotUploaded')
 
@@ -259,7 +263,9 @@ def CreateLock():
     #generating random key and biometric lock from first face image
     #using this random key to encrypt the file
     lock,key=createLock("HelloFlask/static/image_uploads/first_image.jpeg");
-    
+
+    print(key, flush=True)
+
     #Saving lock
     f=open("HelloFlask/static/encryption_folder/lock", 'ab')
     pickle.dump(lock, f)
@@ -280,7 +286,7 @@ def SecondImage():
     if request.method == 'POST':
         faceImage=request.form.get('face');
         getI420FromBase64(faceImage, "HelloFlask/static/image_uploads/second_image.jpeg");
-        return redirect('http://localhost:5555/CreateLock')
+        return redirect('http://localhost:5555/checking')
     return redirect('http://localhost:5555/NotUploaded')
 
 
@@ -290,28 +296,29 @@ def checking():
     keyFile= open("HelloFlask/static/encryption_folder/randomKey", 'rb')
     original_key = pickle.load(keyFile)
     keyFile.close();
-    print(original_key,flush=True)
-    print(type(original_key), flush=True)
+    #print(original_key,flush=True)
+    #print(type(original_key), flush=True)
+
 
     #get lock
     lockFile=open("HelloFlask/static/encryption_folder/lock", 'rb')
     biometric_lock=pickle.load(lockFile)
     lockFile.close();
-    print(biometric_lock, flush=True)
+    #print(biometric_lock, flush=True)
 
     #check if two values are equal, file is decrypted
     isSuccess=check("HelloFlask/static/image_uploads/second_image.jpeg", original_key, biometric_lock)
 
-    #clearing files
-    os.remove("HelloFlask/static/image_uploads/second_image.jpeg")
-    os.remove("HelloFlask/static/image_uploads/first_image.jpeg")
-    os.remove("HelloFlask/static/encryption_folder/ivFile")
-    os.remove("HelloFlask/static/encryption_folder/lock")
-    os.remove("HelloFlask/static/encryption_folder/randomKey")
-    os.remove("HelloFlask/static/encryption_folder/EncryptedFile")
-
     #redirecting
     if isSuccess:
+        #clearing files
+        os.remove("HelloFlask/static/image_uploads/second_image.jpeg")
+        os.remove("HelloFlask/static/image_uploads/first_image.jpeg")
+        os.remove("HelloFlask/static/encryption_folder/ivFile")
+        os.remove("HelloFlask/static/encryption_folder/lock")
+        os.remove("HelloFlask/static/encryption_folder/randomKey")
+        os.remove("HelloFlask/static/encryption_folder/EncryptedFile.enc")
+
         return render_template(
             "checking.html")
     else:
