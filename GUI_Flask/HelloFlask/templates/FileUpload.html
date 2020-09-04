@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+<!--This page allows user to upload the file they wish to encrypt-->
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -27,12 +28,13 @@
         </div>
         <div class="clearfix visible-sm"></div>
 
+        <!--Form to upload File-->
         <div class="row">
             <div style="background-color: lavender; border:5px solid white; height: 125px; display: flex; justify-content: center; align-items:center">
                 <span class="message" id="subMessage" style="padding: 20px">{{ select }}</span>
                 <form method=POST enctype=multipart/form-data action="http://localhost:5555/uploader">
-                    <input type="file" name="file" />
-                    <input type="submit"/>
+                    <input type="file" name="file" accept=".txt, .doc, .docx" />
+                    <input type="submit" />
                 </form>
             </div>
         </div>

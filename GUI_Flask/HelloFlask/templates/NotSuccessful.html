@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+<!--This is the page displayed if the faces did not match, so the decryption was not successful-->
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -7,8 +8,9 @@
     <link rel="stylesheet" type="text/css" href="/static/styles.css" />
 </head>
 <body style="background-color: lightgray">
-    <span class="message" id="error">Decryption not successful</span>
+    <span class="message" id="error">{{ no_match }}</span>
     <br />
-    <a href="/" class="nextStep"> Click to Try again</a>
+    <!--Deletes files then redirects to start page-->
+    <a href="/deleteFiles" class="nextStep"> Click to Try again</a>
 </body>
 </html>

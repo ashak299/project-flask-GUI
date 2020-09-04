@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+<!--This page allows the user to decrypt the encrypted file and then take a second snapshot to decrypt the file-->
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8,11 +9,14 @@
 </head>
 <body>
     <div style="background-color: lavender; border:5px solid white; height: 200px; display: flex; justify-content: center; align-items:center">
-        <span class="message" id="purple">File Encrypted</span>
+        <span class="message" id="purple">{{ encrypted }}</span>
         <br />
-        <a href="HelloFlask/static/encryption_folder/EncryptedFile.enc" download="Encrypted_File" style="padding: 30px"> Download Encrypted file</a>
+        <!--download encrypted file-->
+        <a href="static/encryption_folder/EncryptedFile.enc" download="EncryptedFile.enc" style="padding: 30px"> Download Encrypted file</a>
         <br />
     </div>
+
+    <!--Upload second face image-->
     <span class="message" id="blue">Take a snapshot to decrypt file</span>
     <div style="background-color: aliceblue; border:5px solid white; height: 700px; display: flex; justify-content: center; align-items:center">
         <form method="POST" enctype="multipart/form-data" id="myForm">
@@ -25,7 +29,7 @@
     </div>
 
     <div style="background-color: aliceblue; border:5px solid white; height: 200px; display: flex; justify-content: center; align-items:center">
-        <a href="http://localhost:5555/checking" class="nextStep">Click to Decrypt File</a>
+        <a href="http://localhost:5555/checking" class="nextStep">Click to check image and decrypt file</a>
     </div>
 
     <script type="text/javascript" src="/static/webcamjs-master/webcam.min.js"></script>
@@ -57,7 +61,7 @@
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.open('POST', "http://localhost:5555/SecondImage");
             xmlhttp.send(formData);
-            document.getElementById('upload_success').innerHTML = 'Upload Successful';
+            document.getElementById('upload_success').innerHTML = 'Uploaded, scroll down to check image and decrypt file';
         }
 
     </script>

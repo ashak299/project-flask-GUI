@@ -80,6 +80,7 @@
     <Content Include="HelloFlask\templates\index.html" />
     <Content Include="HelloFlask\templates\NotSuccessful.html" />
     <Content Include="HelloFlask\templates\NotUploaded.html" />
+    <Content Include="HelloFlask\templates\NotUploadedDecrypt.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>

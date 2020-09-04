@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-
+<!--This page is the final page if the decryption was successful, it gives the user the option to download the decrypted file-->
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
@@ -7,7 +7,11 @@
     <link rel="stylesheet" type="text/css" href="/static/styles.css" />
 </head>
 <body style="background-color: lightgray">
-    <span class="message" id="blue">Success!</span>
-    <a download= "file" href="HelloFlask/static/encryption_folder/DecryptedFile.txt"> Click here to download file</a>
+    <span class="message" id="blue">{{ success }}</span>
+    <!--download decrypted file-->
+    <a download= "DecryptedFile.txt" href="static/encryption_folder/DecryptedFile.txt"> Click here to download file</a>
+    <span style="padding: 50px"></span>
+    <!--clear files from the app and redirects back to beginning page-->
+    <a href="/deleteFiles">After download, click here to finish</a>
 </body>
 </html>
