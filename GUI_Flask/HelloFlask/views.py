@@ -26,25 +26,6 @@ from cryptography.hazmat.backends import default_backend
 #reed solomon coder
 RS=rs.RSCoder(128,90)
 
-#takes in a numpy ndarray and outputs a 32 byte value
-def randIntTo32(x):
-    #padding with 0s to reach 256 int values
-    padding = 32 * 8 - len(x)
-    zero_padding = np.zeros(padding).astype(int)
-    padded_arr = np.concatenate((x, zero_padding)).astype(str)
-
-    #dividing these 256 values into 32 sub-arrays of size 8
-    split_arr = np.split(padded_arr, 32)
-
-    #making the 8 values of one subarray into a single string, one byte, and then converting to decimal
-    int_arr = []
-    for i in split_arr:
-        int_arr.append(int(''.join(i), 2))
-    
-    #converting the the int array into a bytes with size 32 bytes
-    bytes_key=bytes(int_arr)
-    return bytes_key
-
 #encryption function
 def encrypt(key):
     backend = default_backend()
@@ -137,7 +118,6 @@ def features(path):
 def createLock(path):
     #turning image into binarized feature vector
     A1=features(path);
-    print(A1)
 
     #generating random Key
     randKey=np.random.choice([0, 1], size=(90,), p=[1./2, 1./2])
@@ -175,9 +155,6 @@ def check(secondFacePath, randomKey, lock):
         K=np.where(np.zeros(90)>0, 1,0)
         for m in range(0,len(key[0])):   
             K[m]=ord(key[0][m])
-
-        print(K, flush=True)
-        print(randomKey, flush=True)
        
         #check if equal
         if (areEqual(K, randomKey, len(randomKey))):
@@ -194,7 +171,7 @@ def check(secondFacePath, randomKey, lock):
             return False;
     #this exception is thrown when the face is not a match
     except rs.RSCodecError:
-        print("Not a match, over threshold: i.e result if the two faces are from different people", flush=True)
+        print("Not a match", flush=True)
         return False;
 
 
@@ -208,6 +185,25 @@ def getI420FromBase64(codec, path):
     image_data = BytesIO(byte_data)
     img = Image.open(image_data)
     img.save(path)
+
+#takes in a numpy ndarray and outputs a 32 byte value, padded with zeros
+def randIntTo32(x):
+    #padding with 0s to reach 256 int values
+    padding = 32 * 8 - len(x)
+    zero_padding = np.zeros(padding).astype(int)
+    padded_arr = np.concatenate((x, zero_padding)).astype(str)
+
+    #dividing these 256 values into 32 sub-arrays of size 8
+    split_arr = np.split(padded_arr, 32)
+
+    #making the 8 values of one subarray into a single string, one byte, and then converting to decimal
+    int_arr = []
+    for i in split_arr:
+        int_arr.append(int(''.join(i), 2))
+    
+    #converting the the int array into a bytes value with size 32 bytes
+    bytes_key=bytes(int_arr)
+    return bytes_key
 
 
 #Upload folders
@@ -309,6 +305,7 @@ def SecondImage():
 def checking():
     #check if image contains a face before proceeding.
     img=features("HelloFlask/static/image_uploads/second_image.jpeg")
+
     #no face detected
     if (isinstance(img[0], str)):
         return redirect("http://localhost:5555/NotUploadedDecrypt")
@@ -318,15 +315,11 @@ def checking():
         keyFile= open("HelloFlask/static/encryption_folder/randomKey", 'rb')
         original_key = pickle.load(keyFile)
         keyFile.close();
-        #print(original_key,flush=True)
-        #print(type(original_key), flush=True)
-
 
         #get lock
         lockFile=open("HelloFlask/static/encryption_folder/lock", 'rb')
         biometric_lock=pickle.load(lockFile)
         lockFile.close();
-        #print(biometric_lock, flush=True)
 
         #check if two values are equal -> if equal, file is decrypted
         isSuccess=check("HelloFlask/static/image_uploads/second_image.jpeg", original_key, biometric_lock)
